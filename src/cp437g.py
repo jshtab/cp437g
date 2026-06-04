@@ -312,12 +312,12 @@ def _define_codec(name, encode_map, decode_map):
         streamwriter=Writer
     )
 
-ibm437g = _define_codec('cp437g', full_encode_map, full_decode_table)
+cp437g = _define_codec('cp437g', full_encode_map, full_decode_table)
 minecraft = _define_codec('minecraft', lower_encode_map, lower_decode_table)
 
 def _search(codec):
     if codec in ('ibm437g', 'cp437g', '437g', 'classicube'):
-        return ibm437g
+        return cp437g
     elif codec == 'minecraft':
         return minecraft
     return None
