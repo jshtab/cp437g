@@ -1,0 +1,325 @@
+"""
+Defines and registers these text codecs:
+ - cp437g (aka 437g, ibm437g, classicube): IBM Code Page 437 memory-mapped graphics
+ - minecraft: the same as ibm437g, but missing glyphs above code point 127.
+"""
+
+import codecs
+
+lower_decode_table = (
+    '\u0000' # NULL
+    '\u263A' # WHITE SMILING FACE
+    '\u263B' # BLACK SMILING FACE
+    '\u2665' # BLACK HEART SUIT
+    '\u2666' # BLACK DIAMOND SUIT
+    '\u2663' # BLACK CLUB SUIT
+    '\u2660' # BLACK SPADE SUIT
+    '\u2022' # BULLET
+    '\u25D8' # INVERSE BULLET
+    '\u25CB' # WHITE CIRCLE
+    '\u25D9' # INVERSE WHITE CIRCLE
+    '\u2642' # MALE SIGN
+    '\u2640' # FEMALE SIGN
+    '\u266A' # EIGHTH NOTE
+    '\u266B' # BEAMED EIGHTH NOTES
+    '\u263C' # WHITE SUN WITH RAYS
+    '\u25BA' # BLACK RIGHT-POINTING POINTER
+    '\u25C4' # BLACK LEFT-POINTING POINTER
+    '\u2195' # UP DOWN ARROW
+    '\u203C' # DOUBLE EXCLAMATION MARK
+    '\u00B6' # PILCROW SIGN
+    '\u00A7' # SECTION SIGN
+    '\u25AC' # BLACK RECTANGLE
+    '\u21A8' # UP DOWN ARROW WITH BASE
+    '\u2191' # UPWARDS ARROW
+    '\u2193' # DOWNWARDS ARROW
+    '\u2192' # RIGHTWARDS ARROW
+    '\u2190' # LEFTWARDS ARROW
+    '\u221F' # RIGHT ANGLE
+    '\u2194' # LEFT RIGHT ARROW
+    '\u25B2' # BLACK UP-POINTING TRIANGLE
+    '\u25BC' # BLACK DOWN-POINTING TRIANGLE
+    '\u0020' # SPACE
+    '\u0021' # EXCLAMATION MARK
+    '\u0022' # QUOTATION MARK
+    '\u0023' # NUMBER SIGN
+    '\u0024' # DOLLAR SIGN
+    '\u0025' # PERCENT SIGN
+    '\u0026' # AMPERSAND
+    '\u0027' # APOSTROPHE
+    '\u0028' # LEFT PARENTHESIS
+    '\u0029' # RIGHT PARENTHESIS
+    '\u002a' # ASTERISK
+    '\u002b' # PLUS SIGN
+    '\u002c' # COMMA
+    '\u002d' # HYPHEN-MINUS
+    '\u002e' # FULL STOP
+    '\u002f' # SOLIDUS
+    '\u0030' # DIGIT ZERO
+    '\u0031' # DIGIT ONE
+    '\u0032' # DIGIT TWO
+    '\u0033' # DIGIT THREE
+    '\u0034' # DIGIT FOUR
+    '\u0035' # DIGIT FIVE
+    '\u0036' # DIGIT SIX
+    '\u0037' # DIGIT SEVEN
+    '\u0038' # DIGIT EIGHT
+    '\u0039' # DIGIT NINE
+    '\u003a' # COLON
+    '\u003b' # SEMICOLON
+    '\u003c' # LESS-THAN SIGN
+    '\u003d' # EQUALS SIGN
+    '\u003e' # GREATER-THAN SIGN
+    '\u003f' # QUESTION MARK
+    '\u0040' # COMMERCIAL AT
+    '\u0041' # LATIN CAPITAL LETTER A
+    '\u0042' # LATIN CAPITAL LETTER B
+    '\u0043' # LATIN CAPITAL LETTER C
+    '\u0044' # LATIN CAPITAL LETTER D
+    '\u0045' # LATIN CAPITAL LETTER E
+    '\u0046' # LATIN CAPITAL LETTER F
+    '\u0047' # LATIN CAPITAL LETTER G
+    '\u0048' # LATIN CAPITAL LETTER H
+    '\u0049' # LATIN CAPITAL LETTER I
+    '\u004a' # LATIN CAPITAL LETTER J
+    '\u004b' # LATIN CAPITAL LETTER K
+    '\u004c' # LATIN CAPITAL LETTER L
+    '\u004d' # LATIN CAPITAL LETTER M
+    '\u004e' # LATIN CAPITAL LETTER N
+    '\u004f' # LATIN CAPITAL LETTER O
+    '\u0050' # LATIN CAPITAL LETTER P
+    '\u0051' # LATIN CAPITAL LETTER Q
+    '\u0052' # LATIN CAPITAL LETTER R
+    '\u0053' # LATIN CAPITAL LETTER S
+    '\u0054' # LATIN CAPITAL LETTER T
+    '\u0055' # LATIN CAPITAL LETTER U
+    '\u0056' # LATIN CAPITAL LETTER V
+    '\u0057' # LATIN CAPITAL LETTER W
+    '\u0058' # LATIN CAPITAL LETTER X
+    '\u0059' # LATIN CAPITAL LETTER Y
+    '\u005a' # LATIN CAPITAL LETTER Z
+    '\u005b' # LEFT SQUARE BRACKET
+    '\u005c' # REVERSE SOLIDUS
+    '\u005d' # RIGHT SQUARE BRACKET
+    '\u005e' # CIRCUMFLEX ACCENT
+    '\u005f' # LOW LINE
+    '\u0060' # GRAVE ACCENT
+    '\u0061' # LATIN SMALL LETTER A
+    '\u0062' # LATIN SMALL LETTER B
+    '\u0063' # LATIN SMALL LETTER C
+    '\u0064' # LATIN SMALL LETTER D
+    '\u0065' # LATIN SMALL LETTER E
+    '\u0066' # LATIN SMALL LETTER F
+    '\u0067' # LATIN SMALL LETTER G
+    '\u0068' # LATIN SMALL LETTER H
+    '\u0069' # LATIN SMALL LETTER I
+    '\u006a' # LATIN SMALL LETTER J
+    '\u006b' # LATIN SMALL LETTER K
+    '\u006c' # LATIN SMALL LETTER L
+    '\u006d' # LATIN SMALL LETTER M
+    '\u006e' # LATIN SMALL LETTER N
+    '\u006f' # LATIN SMALL LETTER O
+    '\u0070' # LATIN SMALL LETTER P
+    '\u0071' # LATIN SMALL LETTER Q
+    '\u0072' # LATIN SMALL LETTER R
+    '\u0073' # LATIN SMALL LETTER S
+    '\u0074' # LATIN SMALL LETTER T
+    '\u0075' # LATIN SMALL LETTER U
+    '\u0076' # LATIN SMALL LETTER V
+    '\u0077' # LATIN SMALL LETTER W
+    '\u0078' # LATIN SMALL LETTER X
+    '\u0079' # LATIN SMALL LETTER Y
+    '\u007a' # LATIN SMALL LETTER Z
+    '\u007b' # LEFT CURLY BRACKET
+    '\u007c' # VERTICAL LINE
+    '\u007d' # RIGHT CURLY BRACKET
+    '\u007e' # TILDE
+    '\u2302' # HOUSE
+)
+upper_decode_table = (
+    '\u00c7' # LATIN CAPITAL LETTER C WITH CEDILLA
+    '\u00fc' # LATIN SMALL LETTER U WITH DIAERESIS
+    '\u00e9' # LATIN SMALL LETTER E WITH ACUTE
+    '\u00e2' # LATIN SMALL LETTER A WITH CIRCUMFLEX
+    '\u00e4' # LATIN SMALL LETTER A WITH DIAERESIS
+    '\u00e0' # LATIN SMALL LETTER A WITH GRAVE
+    '\u00e5' # LATIN SMALL LETTER A WITH RING ABOVE
+    '\u00e7' # LATIN SMALL LETTER C WITH CEDILLA
+    '\u00ea' # LATIN SMALL LETTER E WITH CIRCUMFLEX
+    '\u00eb' # LATIN SMALL LETTER E WITH DIAERESIS
+    '\u00e8' # LATIN SMALL LETTER E WITH GRAVE
+    '\u00ef' # LATIN SMALL LETTER I WITH DIAERESIS
+    '\u00ee' # LATIN SMALL LETTER I WITH CIRCUMFLEX
+    '\u00ec' # LATIN SMALL LETTER I WITH GRAVE
+    '\u00c4' # LATIN CAPITAL LETTER A WITH DIAERESIS
+    '\u00c5' # LATIN CAPITAL LETTER A WITH RING ABOVE
+    '\u00c9' # LATIN CAPITAL LETTER E WITH ACUTE
+    '\u00e6' # LATIN SMALL LIGATURE AE
+    '\u00c6' # LATIN CAPITAL LIGATURE AE
+    '\u00f4' # LATIN SMALL LETTER O WITH CIRCUMFLEX
+    '\u00f6' # LATIN SMALL LETTER O WITH DIAERESIS
+    '\u00f2' # LATIN SMALL LETTER O WITH GRAVE
+    '\u00fb' # LATIN SMALL LETTER U WITH CIRCUMFLEX
+    '\u00f9' # LATIN SMALL LETTER U WITH GRAVE
+    '\u00ff' # LATIN SMALL LETTER Y WITH DIAERESIS
+    '\u00d6' # LATIN CAPITAL LETTER O WITH DIAERESIS
+    '\u00dc' # LATIN CAPITAL LETTER U WITH DIAERESIS
+    '\u00a2' # CENT SIGN
+    '\u00a3' # POUND SIGN
+    '\u00a5' # YEN SIGN
+    '\u20a7' # PESETA SIGN
+    '\u0192' # LATIN SMALL LETTER F WITH HOOK
+    '\u00e1' # LATIN SMALL LETTER A WITH ACUTE
+    '\u00ed' # LATIN SMALL LETTER I WITH ACUTE
+    '\u00f3' # LATIN SMALL LETTER O WITH ACUTE
+    '\u00fa' # LATIN SMALL LETTER U WITH ACUTE
+    '\u00f1' # LATIN SMALL LETTER N WITH TILDE
+    '\u00d1' # LATIN CAPITAL LETTER N WITH TILDE
+    '\u00aa' # FEMININE ORDINAL INDICATOR
+    '\u00ba' # MASCULINE ORDINAL INDICATOR
+    '\u00bf' # INVERTED QUESTION MARK
+    '\u2310' # REVERSED NOT SIGN
+    '\u00ac' # NOT SIGN
+    '\u00bd' # VULGAR FRACTION ONE HALF
+    '\u00bc' # VULGAR FRACTION ONE QUARTER
+    '\u00a1' # INVERTED EXCLAMATION MARK
+    '\u00ab' # LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+    '\u00bb' # RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+    '\u2591' # LIGHT SHADE
+    '\u2592' # MEDIUM SHADE
+    '\u2593' # DARK SHADE
+    '\u2502' # BOX DRAWINGS LIGHT VERTICAL
+    '\u2524' # BOX DRAWINGS LIGHT VERTICAL AND LEFT
+    '\u2561' # BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE
+    '\u2562' # BOX DRAWINGS VERTICAL DOUBLE AND LEFT SINGLE
+    '\u2556' # BOX DRAWINGS DOWN DOUBLE AND LEFT SINGLE
+    '\u2555' # BOX DRAWINGS DOWN SINGLE AND LEFT DOUBLE
+    '\u2563' # BOX DRAWINGS DOUBLE VERTICAL AND LEFT
+    '\u2551' # BOX DRAWINGS DOUBLE VERTICAL
+    '\u2557' # BOX DRAWINGS DOUBLE DOWN AND LEFT
+    '\u255d' # BOX DRAWINGS DOUBLE UP AND LEFT
+    '\u255c' # BOX DRAWINGS UP DOUBLE AND LEFT SINGLE
+    '\u255b' # BOX DRAWINGS UP SINGLE AND LEFT DOUBLE
+    '\u2510' # BOX DRAWINGS LIGHT DOWN AND LEFT
+    '\u2514' # BOX DRAWINGS LIGHT UP AND RIGHT
+    '\u2534' # BOX DRAWINGS LIGHT UP AND HORIZONTAL
+    '\u252c' # BOX DRAWINGS LIGHT DOWN AND HORIZONTAL
+    '\u251c' # BOX DRAWINGS LIGHT VERTICAL AND RIGHT
+    '\u2500' # BOX DRAWINGS LIGHT HORIZONTAL
+    '\u253c' # BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL
+    '\u255e' # BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE
+    '\u255f' # BOX DRAWINGS VERTICAL DOUBLE AND RIGHT SINGLE
+    '\u255a' # BOX DRAWINGS DOUBLE UP AND RIGHT
+    '\u2554' # BOX DRAWINGS DOUBLE DOWN AND RIGHT
+    '\u2569' # BOX DRAWINGS DOUBLE UP AND HORIZONTAL
+    '\u2566' # BOX DRAWINGS DOUBLE DOWN AND HORIZONTAL
+    '\u2560' # BOX DRAWINGS DOUBLE VERTICAL AND RIGHT
+    '\u2550' # BOX DRAWINGS DOUBLE HORIZONTAL
+    '\u256c' # BOX DRAWINGS DOUBLE VERTICAL AND HORIZONTAL
+    '\u2567' # BOX DRAWINGS UP SINGLE AND HORIZONTAL DOUBLE
+    '\u2568' # BOX DRAWINGS UP DOUBLE AND HORIZONTAL SINGLE
+    '\u2564' # BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE
+    '\u2565' # BOX DRAWINGS DOWN DOUBLE AND HORIZONTAL SINGLE
+    '\u2559' # BOX DRAWINGS UP DOUBLE AND RIGHT SINGLE
+    '\u2558' # BOX DRAWINGS UP SINGLE AND RIGHT DOUBLE
+    '\u2552' # BOX DRAWINGS DOWN SINGLE AND RIGHT DOUBLE
+    '\u2553' # BOX DRAWINGS DOWN DOUBLE AND RIGHT SINGLE
+    '\u256b' # BOX DRAWINGS VERTICAL DOUBLE AND HORIZONTAL SINGLE
+    '\u256a' # BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE
+    '\u2518' # BOX DRAWINGS LIGHT UP AND LEFT
+    '\u250c' # BOX DRAWINGS LIGHT DOWN AND RIGHT
+    '\u2588' # FULL BLOCK
+    '\u2584' # LOWER HALF BLOCK
+    '\u258c' # LEFT HALF BLOCK
+    '\u2590' # RIGHT HALF BLOCK
+    '\u2580' # UPPER HALF BLOCK
+    '\u03b1' # GREEK SMALL LETTER ALPHA
+    '\u00df' # LATIN SMALL LETTER SHARP S
+    '\u0393' # GREEK CAPITAL LETTER GAMMA
+    '\u03c0' # GREEK SMALL LETTER PI
+    '\u03a3' # GREEK CAPITAL LETTER SIGMA
+    '\u03c3' # GREEK SMALL LETTER SIGMA
+    '\u00b5' # MICRO SIGN
+    '\u03c4' # GREEK SMALL LETTER TAU
+    '\u03a6' # GREEK CAPITAL LETTER PHI
+    '\u0398' # GREEK CAPITAL LETTER THETA
+    '\u03a9' # GREEK CAPITAL LETTER OMEGA
+    '\u03b4' # GREEK SMALL LETTER DELTA
+    '\u221e' # INFINITY
+    '\u03c6' # GREEK SMALL LETTER PHI
+    '\u03b5' # GREEK SMALL LETTER EPSILON
+    '\u2229' # INTERSECTION
+    '\u2261' # IDENTICAL TO
+    '\u00b1' # PLUS-MINUS SIGN
+    '\u2265' # GREATER-THAN OR EQUAL TO
+    '\u2264' # LESS-THAN OR EQUAL TO
+    '\u2320' # TOP HALF INTEGRAL
+    '\u2321' # BOTTOM HALF INTEGRAL
+    '\u00f7' # DIVISION SIGN
+    '\u2248' # ALMOST EQUAL TO
+    '\u00b0' # DEGREE SIGN
+    '\u2219' # BULLET OPERATOR
+    '\u00b7' # MIDDLE DOT
+    '\u221a' # SQUARE ROOT
+    '\u207f' # SUPERSCRIPT LATIN SMALL LETTER N
+    '\u00b2' # SUPERSCRIPT TWO
+    '\u25a0' # BLACK SQUARE
+    '\u00a0' # NO-BREAK SPACE
+)
+
+full_decode_table = lower_decode_table + upper_decode_table
+
+full_encode_map = codecs.charmap_build(full_decode_table)
+lower_encode_map = codecs.charmap_build(lower_decode_table)
+
+class _Codec(codecs.Codec):
+    def encode(self, input, errors='strict'):
+        return codecs.charmap_encode(input, errors, self.encode_mapping)
+
+    def decode(self, input, errors='strict'):
+        return codecs.charmap_decode(input, errors, self.decode_mapping)
+
+class _Encoder(codecs.IncrementalEncoder):
+    def encode(self, input, final=False):
+        return codecs.charmap_encode(input, self.errors, self.encode_mapping)[0]
+
+class _Decoder(codecs.IncrementalDecoder):
+    def decode(self, input, final=True):
+        return codecs.charmap_decode(input, self.errors, self.decode_mapping)[0]
+
+def _define_codec(name, encode_map, decode_map):
+    class Vars:
+        encode_mapping = encode_map
+        decode_mapping = decode_map
+    class Codec(Vars, _Codec):
+        pass
+    class Encoder(Vars, _Encoder):
+        pass
+    class Decoder(Vars, _Decoder):
+        pass
+    class Reader(Vars, _Codec, codecs.StreamReader):
+        pass
+    class Writer(Vars, _Codec, codecs.StreamWriter):
+        pass
+    codec_instance = Codec()
+    return codecs.CodecInfo(
+        name=name,
+        encode=codec_instance.encode,
+        decode=codec_instance.decode,
+        incrementalencoder=Encoder,
+        incrementaldecoder=Decoder,
+        streamreader=Reader,
+        streamwriter=Writer
+    )
+
+ibm437g = _define_codec('cp437g', full_encode_map, full_decode_table)
+minecraft = _define_codec('minecraft', lower_encode_map, lower_decode_table)
+
+def _search(codec):
+    if codec in ('ibm437g', 'cp437g', '437g', 'classicube'):
+        return ibm437g
+    elif codec == 'minecraft':
+        return minecraft
+    return None
+
+codecs.register(_search)

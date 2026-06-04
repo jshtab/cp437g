@@ -1,0 +1,78 @@
+name: unittest
+
+on:
+  pull_request:
+    branches: ['main']
+  push:
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install build
+        run: python -m pip install --upgrade pip build
+
+      - name: Build
+        run: python -m build --wheel --outdir dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: wheel
+          path: dist/*.whl
+          if-no-files-found: error
+
+  test:
+    name: "Python ${{ matrix.python }}"
+    runs-on: "${{ matrix.os }}"
+    needs: build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: "3.7"
+            os: "ubuntu-22.04"
+          - python: "3.8"
+            os: "ubuntu-latest"
+          - python: "3.9"
+            os: "ubuntu-latest"
+          - python: "3.10"
+            os: "ubuntu-latest"
+          - python: "3.11"
+            os: "ubuntu-latest"
+          - python: "3.12"
+            os: "ubuntu-latest"
+          - python: "3.13"
+            os: "ubuntu-latest"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "${{ matrix.python }}"
+
+      - name: Download wheel
+        uses: actions/download-artifact@v6
+        with:
+          name: wheel
+          path: dist/
+
+      - name: Install wheel
+        run: python -m pip install --upgrade pip dist/*.whl
+
+      - name: Run unittest discovery
+        run: python -m unittest discover
