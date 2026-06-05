@@ -284,7 +284,7 @@ class _Encoder(codecs.IncrementalEncoder):
         return codecs.charmap_encode(input, self.errors, self.encode_mapping)[0]
 
 class _Decoder(codecs.IncrementalDecoder):
-    def decode(self, input, final=True):
+    def decode(self, input, final=False):
         return codecs.charmap_decode(input, self.errors, self.decode_mapping)[0]
 
 def _define_codec(name, encode_map, decode_map):
